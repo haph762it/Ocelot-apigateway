@@ -1,0 +1,78 @@
+﻿{
+  "GlobalConfiguration": {
+    "RateLimitOptions": {
+      "DisableRateLimitHeaders": false,
+      "QuotaExceededMessage": "Bạn đã vượt quá số lượng request, vui lòng thử lại sau!",
+      "HttpStatusCode": 418,
+      "ClientIdHeader": "MyRateLimiting"
+    }
+  },
+  "Routes": [
+    {
+      "SwaggerKey": "gateway",
+      "UpstreamPathTemplate": "/gateway/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "DownstreamPathTemplate": "/{everything}/",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "192.168.1.18",
+          "Port": 8081
+        }
+      ],
+      "RateLimitOptions": {
+        "DisableRateLimitHeaders": false, // Hiển thị thông tin giới hạn trong header (RateLimit-Remaining)
+        "ClientWhitelist": [], // array of strings
+        "EnableRateLimiting": true,
+        "Period": "30s", // seconds, minutes, hours, days. Trong 30s giới hạn 5 request. và sau PeriodTimespan 10s sẽ reset số này
+        "PeriodTimespan": 10, // only seconds
+        "Limit": 5
+      }
+    },
+    {
+      "SwaggerKey": "core-api",
+      "UpstreamPathTemplate": "/core-api/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "DownstreamPathTemplate": "/{everything}/",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "192.168.1.18",
+          "Port": 8082
+        }
+      ],
+      "RateLimitOptions": {
+        "DisableRateLimitHeaders": false, // Hiển thị thông tin giới hạn trong header (RateLimit-Remaining)
+        "ClientWhitelist": [], // array of strings
+        "EnableRateLimiting": true,
+        "Period": "30s", // seconds, minutes, hours, days. Trong 30s giới hạn 5 request. và sau PeriodTimespan 10s sẽ reset số này
+        "PeriodTimespan": 10, // only seconds
+        "Limit": 5
+      }
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "gateway",
+      "TransformByOcelotConfig": "false",
+      "Config": [
+        {
+          "Name": "Gateway-swagger",
+          "Version": "v1",
+          "Url": "http://192.168.1.18:8081/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "core-api",
+      "TransformByOcelotConfig": "false",
+      "Config": [
+        {
+          "Name": "Core-api-swagger",
+          "Version": "v1",
+          "Url": "http://192.168.1.18:8082/../swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
+}
